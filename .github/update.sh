@@ -60,7 +60,7 @@ try_to_update() {
     local_sha1=$(echo "$meta" | jq -r '.sha1')
     remote_sha1=$(echo "$target_tag_meta" | jq -r '.commit.sha')
 
-    if [ "$version_name" = "twilight-official" ]; then
+    if [ "$version_name" = "twilight-official" ] || [ "$version_name" = "twilight" ]; then
         release_url="https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-${arch}.tar.xz"
         remote_sha256=$(curl -sL "$release_url" | sha256sum | cut -d' ' -f1)
         remote_sha256="sha256-$(echo -n "$remote_sha256" | base64)"
@@ -103,7 +103,8 @@ try_to_update() {
 
         short_sha1="$(echo "$remote_sha1" | cut -c1-7)"
 
-        release_name="$version-$short_sha1"
+        current_datetime=$(date +%Y%m%d%H)
+        release_name="$version-$current_datetime"
 
         flake_repo_location="muratoffalex/zen-browser-flake"
 
@@ -112,7 +113,7 @@ try_to_update() {
 
             # Users with push access to the repository can create a release.
             gh release --repo="$flake_repo_location" \
-                create "$release_name" --notes "$version#$remote_sha1 (for resilient)"
+                create "$release_name" --notes "$semver#$remote_sha1 (for resilient)"
         else
             echo "Release $release_name already exists, skipping creation..."
         fi
@@ -143,11 +144,12 @@ try_to_update() {
     fi
 
     if [ "$version_name" = "twilight-official" ]; then
+        semver="$twilight_version_name"
         jq ".[\"$version_name\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
         mv sources.json.tmp sources.json
     fi
 
-    echo "$version_name was updated to $version"
+    echo "$version_name was updated to $semver"
 
     if ! $ci; then
         return
