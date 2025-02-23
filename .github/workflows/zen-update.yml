@@ -15,16 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixpkgs-unstable
+
       - name: Check if update is needed
         id: check
         run: |
           .github/update.sh --ci --only-check
-
-      - name: Install Nix
-        if: steps.check.outputs.should_update == 'true'
-        uses: cachix/install-nix-action@v27
-        with:
-          nix_path: nixpkgs=channel:nixpkgs-unstable
 
       - name: Setup Nix Magic Cache
         if: steps.check.outputs.should_update == 'true'
