@@ -62,8 +62,9 @@ try_to_update() {
 
     if [ "$version_name" = "twilight" ]; then
         release_url="https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-${arch}.tar.xz"
-        remote_sha256=$(curl -sL "$release_url" | sha256sum | cut -d' ' -f1)
-        remote_sha256="sha256-$(echo -n "$remote_sha256" | base64)"
+
+        prefetch_output=$(nix store prefetch-file --unpack --hash-type sha256 --json "$release_url")
+        remote_sha256=$(echo "$prefetch_output" | jq -r '.hash')
 
         local_sha256=$(jq -r ".[\"$version_name\"][\"${arch}-linux\"].sha256" < sources.json)
 
@@ -94,8 +95,12 @@ try_to_update() {
     version=$(echo "$target_tag_meta" | jq -r '.name')
     download_url="https://github.com/zen-browser/desktop/releases/download/$version/zen.linux-$arch.tar.xz"
 
-    prefetch_output=$(nix store prefetch-file --unpack --hash-type sha256 --json "$download_url")
-    sha256=$(echo "$prefetch_output" | jq -r '.hash')
+    if [ -n "$remote_sha256" ]; then
+        sha256="$remote_sha256"
+    else
+        prefetch_output=$(nix store prefetch-file --unpack --hash-type sha256 --json "$download_url")
+        sha256=$(echo "$prefetch_output" | jq -r '.hash')
+    fi
 
     semver=$version
     if [ "$version_name" = "twilight" ]; then
