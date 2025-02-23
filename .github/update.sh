@@ -63,11 +63,11 @@ try_to_update() {
     if [ "$version_name" = "twilight-official" ]; then
         release_url="https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-${arch}.tar.xz"
         remote_sha256=$(curl -sL "$release_url" | sha256sum | cut -d' ' -f1)
-        remote_sha256="sha256-$(echo -n "$current_sha256" | base64)"
+        remote_sha256="sha256-$(echo -n "$remote_sha256" | base64)"
 
         local_sha256=$(jq -r ".[\"$version_name\"][\"${arch}-linux\"].sha256" < sources.json)
 
-        echo "Checking $version_name version @ $arch... local=$saved_sha256 remote=$current_sha256"
+        echo "Checking $version_name version @ $arch... local=$local_sha256 remote=$remote_sha256"
 
         if [ "$remote_sha256" = "$local_sha256" ]; then
             echo "Assets for twilight-official ${arch} are up to date"
@@ -105,7 +105,7 @@ try_to_update() {
 
         release_name="$version-$short_sha1"
 
-        flake_repo_location="0xc000022070/zen-browser-flake"
+        flake_repo_location="muratoffalex/zen-browser-flake"
 
         if ! gh release list | grep "$release_name" >/dev/null; then
             echo "Creating $release_name release..."
@@ -122,7 +122,7 @@ try_to_update() {
                 artifact_id=$(echo "$line" | cut -d' ' -f1)
                 artifact_name=$(echo "$line" | cut -d' ' -f2)
 
-                self_download_url="https://github.com/0xc000022070/zen-browser-flake/releases/download/$release_name/zen.linux-$arch.tar.xz"
+                self_download_url="https://github.com/muratoffalex/zen-browser-flake/releases/download/$release_name/zen.linux-$arch.tar.xz"
 
                 if ! gh release --repo="$flake_repo_location" view "$release_name" | grep "$artifact_name" >/dev/null; then
                     echo "[downloading] An artifact $artifact_name doesn't exists in $release_name"
@@ -142,8 +142,10 @@ try_to_update() {
             done
     fi
 
-    jq ".[\"$version_name-official\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
-    mv sources.json.tmp sources.json
+    if [ "$version_name" = "twilight-official" ]; then
+        jq ".[\"$version_name\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
+        mv sources.json.tmp sources.json
+    fi
 
     echo "$version_name was updated to $version"
 
