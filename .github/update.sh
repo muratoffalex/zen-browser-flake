@@ -60,7 +60,7 @@ try_to_update() {
     local_sha1=$(echo "$meta" | jq -r '.sha1')
     remote_sha1=$(echo "$target_tag_meta" | jq -r '.commit.sha')
 
-    if [ "$version_name" = "twilight-official" ] || [ "$version_name" = "twilight" ]; then
+    if [ "$version_name" = "twilight" ]; then
         release_url="https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-${arch}.tar.xz"
         remote_sha256=$(curl -sL "$release_url" | sha256sum | cut -d' ' -f1)
         remote_sha256="sha256-$(echo -n "$remote_sha256" | base64)"
@@ -70,11 +70,11 @@ try_to_update() {
         echo "Checking $version_name version @ $arch... local=$local_sha256 remote=$remote_sha256"
 
         if [ "$remote_sha256" = "$local_sha256" ]; then
-            echo "Assets for twilight-official ${arch} are up to date"
+            echo "Assets for twilight ${arch} are up to date"
             return
         fi
 
-        echo "SHA256 changed for twilight-official ${arch} ($local_sha256 -> $remote_sha256)"
+        echo "SHA256 changed for twilight ${arch} ($local_sha256 -> $remote_sha256)"
     else
         echo "Checking $version_name version @ $arch... local=$local_sha1 remote=$remote_sha1"
 
@@ -143,11 +143,8 @@ try_to_update() {
             done
     fi
 
-    if [ "$version_name" = "twilight-official" ]; then
-        semver="$twilight_version_name"
-        jq ".[\"$version_name\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
-        mv sources.json.tmp sources.json
-    fi
+    jq ".[\"$version_name-official\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
+    mv sources.json.tmp sources.json
 
     echo "$version_name was updated to $semver"
 
@@ -181,8 +178,6 @@ try_to_update "beta" "x86_64" "$beta_tag"
 try_to_update "beta" "aarch64" "$beta_tag"
 try_to_update "twilight" "x86_64" "$twilight_tag"
 try_to_update "twilight" "aarch64" "$twilight_tag"
-try_to_update "twilight-official" "x86_64" "$twilight_tag"
-try_to_update "twilight-official" "aarch64" "$twilight_tag"
 
 if $only_check && $ci; then
     echo "should_update=false" >>"$GITHUB_OUTPUT"
