@@ -17,14 +17,14 @@
     "x86_64-linux": {
       "version": "1.8t",
       "sha1": "8813c5174e2adfe4c1ca8827aa1da748f6e3d070",
-      "url": "https://github.com/muratoffalex/zen-browser-flake/releases/download/twilight-2025022310/zen.linux-x86_64.tar.xz",
-      "sha256": "sha256-Or911aWg30rRwtbEjGkOgpKmI6IisaPIBJC/nJ0aONA="
+      "url": "https://github.com/muratoffalex/zen-browser-flake/releases/download/twilight-2025022313/zen.linux-x86_64.tar.xz",
+      "sha256": "sha256-xngTCqDFMwRMx7hcYTVyzBBA66+Pd4wE5V6Xghk3Gdg="
     },
     "aarch64-linux": {
       "version": "1.8t",
       "sha1": "8813c5174e2adfe4c1ca8827aa1da748f6e3d070",
-      "url": "https://github.com/muratoffalex/zen-browser-flake/releases/download/twilight-2025022310/zen.linux-aarch64.tar.xz",
-      "sha256": "sha256-IfR8VUhtQtLFXU6O0NnkCau5jx9Yng1hAnWQKq7Uii0="
+      "url": "https://github.com/muratoffalex/zen-browser-flake/releases/download/twilight-2025022313/zen.linux-aarch64.tar.xz",
+      "sha256": "sha256-4nh5mkTLICPxPOh2HBTHF//fbwhGYBKeRDPjB7rZjXc="
     }
   },
   "twilight-official": {
@@ -32,13 +32,13 @@
       "version": "1.8t",
       "sha1": "8813c5174e2adfe4c1ca8827aa1da748f6e3d070",
       "url": "https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-x86_64.tar.xz",
-      "sha256": "sha256-Or911aWg30rRwtbEjGkOgpKmI6IisaPIBJC/nJ0aONA="
+      "sha256": "sha256-xngTCqDFMwRMx7hcYTVyzBBA66+Pd4wE5V6Xghk3Gdg="
     },
     "aarch64-linux": {
       "version": "1.8t",
       "sha1": "8813c5174e2adfe4c1ca8827aa1da748f6e3d070",
       "url": "https://github.com/zen-browser/desktop/releases/download/twilight/zen.linux-aarch64.tar.xz",
-      "sha256": "sha256-IfR8VUhtQtLFXU6O0NnkCau5jx9Yng1hAnWQKq7Uii0="
+      "sha256": "sha256-4nh5mkTLICPxPOh2HBTHF//fbwhGYBKeRDPjB7rZjXc="
     }
   }
 }
