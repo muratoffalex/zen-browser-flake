@@ -148,7 +148,7 @@ try_to_update() {
             done
     fi
 
-    jq ".[\"$version_name-official\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
+    jq ".[\"$version_name\"][\"$arch-linux\"] = {\"version\":\"$semver\",\"sha1\":\"$remote_sha1\",\"url\":\"$download_url\",\"sha256\":\"$sha256\"}" <sources.json >sources.json.tmp
     mv sources.json.tmp sources.json
 
     echo "$version_name was updated to $semver"
